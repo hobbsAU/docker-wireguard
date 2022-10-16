@@ -15,19 +15,24 @@ env:
 
 jobs:
   build-and-push-image:
+
     runs-on: ubuntu-latest
+
     permissions:
       contents: read
       packages: write
+
     steps:
       -
         name: Checkout repository
         uses: actions/checkout@v3
 
       -
-        name: Get tag
-        id: repository
-        run: echo "tag=$(git describe --tags HEAD)" > $GITHUB_ENV
+        name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
       -
         name: Set up Docker Buildx
@@ -48,4 +53,5 @@ jobs:
           context: .
           platforms: linux/amd64
           push: true
-          tags: ghcr.io/${{ github.repository }}:${{ env.tag }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
