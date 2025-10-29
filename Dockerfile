@@ -1,4 +1,4 @@
-FROM alpine:3.20.3
+FROM alpine:3.22
 
 # Install wireguard packges
 RUN apk --no-cache --update upgrade && apk --no-cache add wireguard-tools iptables inotify-tools
